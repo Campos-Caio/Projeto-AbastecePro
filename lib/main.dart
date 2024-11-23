@@ -1,4 +1,6 @@
 import 'package:abastece_pro/screens/home_page.dart';
+import 'package:abastece_pro/screens/login_page.dart';
+import 'package:abastece_pro/screens/register_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -87,7 +89,12 @@ class AbasteceProApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      initialRoute: '/login',
+      routes: {
+        '/login' : (context) => const LoginPage(),
+        '/register' : (context) => const RegisterPage(),
+        '/home' : (context) => const HomePage(),
+      },
     );
   }
 }

@@ -21,14 +21,8 @@ class _HomePageState extends State<HomePage> {
     {"nome": "Corolla", "placa": "LMN-9101", "modelo": "2018"},
   ];
 
-  final teste = <String,String>{
-    "teste" : "teste"
-  };
-  
-
   @override
   Widget build(BuildContext context) {
-    database.collection("teste").doc("teste").set(teste).onError((error, stackTrace) => print("Erro no firebase"));
     return Scaffold(
       appBar: AppBar(
         title: const Text('AbastecePro'),
