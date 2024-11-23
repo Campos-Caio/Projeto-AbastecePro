@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "30445512610",
+    "project_id": "abastecepro-fb3c1",
+    "storage_bucket": "abastecepro-fb3c1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30445512610:android:0412e231f8ba66b572b4fb",
+        "android_client_info": {
+          "package_name": "com.cc.abastecePro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30445512610-oibu1l9r9s22tqkjvpvoesd461moe6b1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQyYMl4SE45XddusX4kpvCcU9ysVZygP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30445512610-oibu1l9r9s22tqkjvpvoesd461moe6b1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "30445512610-pljfvb5t8gei2tod492lts3s17rgle2f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.abastecePro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

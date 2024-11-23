@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,14 +13,22 @@ void trocaPagina(BuildContext context, Widget pagina) {
 }
 
 class _HomePageState extends State<HomePage> {
+  final database = FirebaseFirestore.instance; 
+
   final List<Map<String, String>> veiculos = [
     {"nome": "Fusca", "placa": "ABC-1234", "modelo": "1975"},
     {"nome": "Civic", "placa": "XYZ-5678", "modelo": "2020"},
     {"nome": "Corolla", "placa": "LMN-9101", "modelo": "2018"},
   ];
 
+  final teste = <String,String>{
+    "teste" : "teste"
+  };
+  
+
   @override
   Widget build(BuildContext context) {
+    database.collection("teste").doc("teste").set(teste).onError((error, stackTrace) => print("Erro no firebase"));
     return Scaffold(
       appBar: AppBar(
         title: const Text('AbastecePro'),
