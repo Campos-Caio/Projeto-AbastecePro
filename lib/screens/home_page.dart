@@ -79,6 +79,9 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.gas_meter),
               title: Text("Historico de abastecimentos"),
+              onTap: () {
+                Navigator.of(context).pushNamed('/supplyHistory');
+              },
             ),
             ListTile(
               leading: Icon(Icons.person),
@@ -111,7 +114,7 @@ class _HomePageState extends State<HomePage> {
             itemCount: veichules.length,
             itemBuilder: (context, index) {
               final veichule = veichules[index];
-              final veichuleId = veichule.id; 
+              final veichuleId = veichule.id;
               return Card(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

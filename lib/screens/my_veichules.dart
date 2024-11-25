@@ -1,3 +1,4 @@
+import 'package:abastece_pro/screens/veichule_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,6 +66,14 @@ class MyVeichules extends StatelessWidget {
                   ),
                   subtitle: Text(
                       "Placa: ${veichule['plate']}\nModelo: ${veichule['model']}\nAno: ${veichule['year']}"),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            VeichuleDetails(veichule: veichule),
+                      ),
+                    );
+                  },
                 ),
               );
             },
