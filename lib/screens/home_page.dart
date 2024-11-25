@@ -1,4 +1,6 @@
+import 'package:abastece_pro/screens/veichule_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,12 +10,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-void trocaPagina(BuildContext context, Widget pagina) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => pagina));
-}
-
 class _HomePageState extends State<HomePage> {
-  final database = FirebaseFirestore.instance; 
+  final database = FirebaseFirestore.instance;
 
   final List<Map<String, String>> veiculos = [
     {"nome": "Fusca", "placa": "ABC-1234", "modelo": "1975"},
@@ -23,6 +21,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final veichulesStream = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('veichules')
+        .snapshots();
     return Scaffold(
       appBar: AppBar(
         title: const Text('AbastecePro'),
@@ -39,8 +43,11 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color(0xFFB39DDB),
               ),
-              accountName: Text("NomeDoUsuario"),
-              accountEmail: Text("EmailDoUsuario"),
+              accountName: Text(
+                  FirebaseAuth.instance.currentUser?.displayName ??
+                      "Nome nao disponivel!"),
+              accountEmail: Text(FirebaseAuth.instance.currentUser?.email ??
+                  "Email nao disponivel!"),
               currentAccountPicture: Center(
                 child: CircleAvatar(
                   radius: 40,
@@ -52,16 +59,22 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.home),
               title: Text("Home"),
               onTap: () {
-                trocaPagina(context, HomePage());
+                Navigator.of(context).pushNamed("/home");
               },
             ),
             ListTile(
               leading: Icon(Icons.directions_car_filled_outlined),
               title: Text("Meus Veiculos"),
+              onTap: () {
+                Navigator.of(context).pushNamed("/myVeichules");
+              },
             ),
             ListTile(
               leading: Icon(Icons.add),
               title: Text("Adicionar Veiculos"),
+              onTap: () {
+                Navigator.of(context).pushNamed('/registerVeichule');
+              },
             ),
             ListTile(
               leading: Icon(Icons.gas_meter),
@@ -78,28 +91,64 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: ListView.builder(
-          itemCount: veiculos.length, 
-          itemBuilder: (context, index) {
-            final veiculo = veiculos[index]; 
-            return Card(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-              child: ListTile(
-                contentPadding: EdgeInsets.all(5),
-                leading: Icon(Icons.directions_car,size: 40,color: Colors.deepPurple,),
-                title: Text(veiculo["nome"]!,style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text("Placa: ${veiculo['placa']}\nModelo: ${veiculo['modelo']}"),
-                onTap: (){} // funcao para abrir detalhes do veiculo,
-              ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: veichulesStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          }),
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: const Text('Nenhum veiculo registrado!'),
+            );
+          }
+
+          final veichules = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: veichules.length,
+            itemBuilder: (context, index) {
+              final veichule = veichules[index];
+              final veichuleId = veichule.id; 
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(5),
+                  leading: const Icon(
+                    Icons.directions_car,
+                    size: 40,
+                    color: Colors.deepPurple,
+                  ),
+                  title: Text(
+                    veichule['name'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                      "Placa: ${veichule['plate']}\nModelo: ${veichule['model']}\nAno: ${veichule['year']}"),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            VeichuleDetails(veichule: veichule),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
+        child: Icon(Icons.gas_meter_sharp),
       ),
     );
   }
