@@ -1,5 +1,6 @@
 import 'package:abastece_pro/screens/fuel_register.dart';
 import 'package:abastece_pro/widgets/custom_button.dart';
+import 'package:abastece_pro/widgets/custom_input_decoration.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +40,136 @@ class VeichuleDetails extends StatelessWidget {
     });
   }
 
+  void _deleteVeichule(BuildContext context) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Veículo excluído.'),
+        action: SnackBarAction(
+          label: 'Desfazer',
+          onPressed: () async {
+            // Restaura o veículo caso o usuário desfaça a exclusão
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection('veichules')
+                .doc(veichule.id)
+                .set(veichule.data() as Map<String, dynamic>);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Exclusão desfeita.')),
+            );
+          },
+        ),
+      ),
+    );
+
+    // Exclui o veículo após 3 segundos se o usuário não desfizer a exclusão
+    Future.delayed(const Duration(seconds: 3), () async {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('veichules')
+          .doc(veichule.id)
+          .delete();
+    });
+
+    Navigator.pop(context);
+  }
+
+  void _showEditDialog(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    final _nameController = TextEditingController(text: veichule['name']);
+    final _plateController = TextEditingController(text: veichule['plate']);
+    final _modelController = TextEditingController(text: veichule['model']);
+    final _yearController = TextEditingController(text: veichule['year']);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Editar Veículo'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: customInputDecoration('Nome', Icons.person),
+                  style: TextStyle(color: Colors.black),                  
+                  validator: (value) =>
+                      value!.isEmpty ? 'Informe o nome' : null,
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _plateController,
+                  decoration: customInputDecoration('Placa', Icons.add),
+                  style: TextStyle(color: Colors.black),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Informe a placa' : null,
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _modelController,
+                  decoration: customInputDecoration('Modelo', Icons.add),
+                  style: TextStyle(color: Colors.black),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Informe o modelo' : null,
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _yearController,
+                  decoration: customInputDecoration('Placa', Icons.calendar_month),
+                  style: TextStyle(color: Colors.black),
+                  keyboardType: TextInputType.number,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Informe o ano' : null,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  final userId = FirebaseAuth.instance.currentUser!.uid;
+
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(userId)
+                      .collection('veichules')
+                      .doc(veichule.id)
+                      .update({
+                    'name': _nameController.text,
+                    'plate': _plateController.text,
+                    'model': _modelController.text,
+                    'year': _yearController.text,
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Veículo atualizado com sucesso!'),
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userId = FirebaseAuth.instance.currentUser?.uid; 
+    final userId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Detalhes do Veículo')),
@@ -70,6 +198,25 @@ class VeichuleDetails extends StatelessWidget {
                       "Modelo: ${veichule['model']}\n"
                       "Ano: ${veichule['year']}\n"
                       "Média de Consumo: ${averageConsumption.toStringAsFixed(2)} km/L",
+                    ),
+                    trailing: PopupMenuButton(
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          _showEditDialog(context);
+                        } else if (value == 'delete') {
+                          _deleteVeichule(context);
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Editar'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Excluir'),
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -138,7 +138,6 @@ class _HomePageState extends State<HomePage> {
             itemCount: veichules.length,
             itemBuilder: (context, index) {
               final veichule = veichules[index];
-              final veichuleId = veichule.id;
               return Card(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
