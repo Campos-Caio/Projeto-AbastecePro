@@ -13,11 +13,25 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final database = FirebaseFirestore.instance;
 
-  final List<Map<String, String>> veiculos = [
-    {"nome": "Fusca", "placa": "ABC-1234", "modelo": "1975"},
-    {"nome": "Civic", "placa": "XYZ-5678", "modelo": "2020"},
-    {"nome": "Corolla", "placa": "LMN-9101", "modelo": "2018"},
-  ];
+  void _logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context)
+        .pushReplacementNamed('/login'); // Ajuste conforme sua rota de login
+  }
+
+    Future<String> getUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return doc.data()?['name'] ?? "Nome não disponível";
+    }
+    return "Usuário não logado";
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +57,15 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color(0xFFB39DDB),
               ),
-              accountName: Text(
-                  FirebaseAuth.instance.currentUser?.displayName ??
-                      "Nome nao disponivel!"),
+              accountName: FutureBuilder<String>(
+                future: getUserName(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Carregando...");
+                  }
+                  return Text(snapshot.data ?? "Nome não disponível");
+                },
+              ),
               accountEmail: Text(FirebaseAuth.instance.currentUser?.email ??
                   "Email nao disponivel!"),
               currentAccountPicture: Center(
@@ -86,10 +106,14 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.person),
               title: Text("Perfil"),
+              onTap: () {
+                Navigator.of(context).pushNamed('/profile');
+              },
             ),
             ListTile(
               leading: Icon(Icons.logout_outlined),
               title: Text("Logout!"),
+              onTap: () => _logout(context),
             ),
           ],
         ),

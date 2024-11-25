@@ -1,6 +1,7 @@
 import 'package:abastece_pro/screens/home_page.dart';
 import 'package:abastece_pro/screens/login_page.dart';
 import 'package:abastece_pro/screens/my_veichules.dart';
+import 'package:abastece_pro/screens/profile_page.dart';
 import 'package:abastece_pro/screens/register_page.dart';
 import 'package:abastece_pro/screens/supply_history.dart';
 import 'package:abastece_pro/screens/veichule_register.dart';
@@ -100,6 +101,7 @@ class AbasteceProApp extends StatelessWidget {
         '/registerVeichule' : (context) => const VeichuleRegister(), 
         '/myVeichules' : (context) => const MyVeichules(), 
         '/supplyHistory': (context) => const SupplyHistory(), 
+        '/profile': (context) => const ProfilePage(), 
       },
     );
   }
