@@ -15,11 +15,10 @@ class _HomePageState extends State<HomePage> {
 
   void _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context)
-        .pushReplacementNamed('/login'); // Ajuste conforme sua rota de login
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
-    Future<String> getUserName() async {
+  Future<String> getUserName() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -32,7 +31,6 @@ class _HomePageState extends State<HomePage> {
     return "Usuário não logado";
   }
 
-
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -41,20 +39,18 @@ class _HomePageState extends State<HomePage> {
         .doc(user!.uid)
         .collection('veichules')
         .snapshots();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('AbastecePro'),
         centerTitle: true,
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.gas_meter_rounded))
-        ],
       ),
       drawer: Drawer(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFB39DDB),
               ),
               accountName: FutureBuilder<String>(
@@ -68,51 +64,55 @@ class _HomePageState extends State<HomePage> {
               ),
               accountEmail: Text(FirebaseAuth.instance.currentUser?.email ??
                   "Email nao disponivel!"),
-              currentAccountPicture: Center(
+              currentAccountPicture: const Center(
                 child: CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.black,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
+              leading: const Icon(Icons.home),
+              title: const Text("Home"),
               onTap: () {
                 Navigator.of(context).pushNamed("/home");
               },
             ),
             ListTile(
-              leading: Icon(Icons.directions_car_filled_outlined),
-              title: Text("Meus Veiculos"),
+              leading: const Icon(Icons.directions_car_filled_outlined),
+              title: const Text("Meus Veiculos"),
               onTap: () {
                 Navigator.of(context).pushNamed("/myVeichules");
               },
             ),
             ListTile(
-              leading: Icon(Icons.add),
-              title: Text("Adicionar Veiculos"),
+              leading: const Icon(Icons.add),
+              title: const Text("Adicionar Veiculos"),
               onTap: () {
                 Navigator.of(context).pushNamed('/registerVeichule');
               },
             ),
             ListTile(
-              leading: Icon(Icons.gas_meter),
-              title: Text("Historico de abastecimentos"),
+              leading: const Icon(Icons.gas_meter),
+              title: const Text("Historico de abastecimentos"),
               onTap: () {
                 Navigator.of(context).pushNamed('/supplyHistory');
               },
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text("Perfil"),
+              leading: const Icon(Icons.person),
+              title: const Text("Perfil"),
               onTap: () {
                 Navigator.of(context).pushNamed('/profile');
               },
             ),
             ListTile(
-              leading: Icon(Icons.logout_outlined),
-              title: Text("Logout!"),
+              leading: const Icon(Icons.logout_outlined),
+              title: const Text("Logout!"),
               onTap: () => _logout(context),
             ),
           ],
@@ -127,8 +127,38 @@ class _HomePageState extends State<HomePage> {
             );
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: const Text('Nenhum veiculo registrado!'),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Você não tem nenhum veículo cadastrado! :(",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey.withOpacity(0.5),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/registerVeichule');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Colors.deepPurple,
+                    ),
+                    child: const Text(
+                      "Cadastre seu primeiro veículo",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 
@@ -173,8 +203,10 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.gas_meter_sharp),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/registerVeichule');
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -45,7 +45,7 @@ class FuelRegister extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -55,7 +55,7 @@ class FuelRegister extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 decoration: customInputDecoration(
                     "Litros Abastecidos", Icons.gas_meter),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 validator: (value) =>
                     value!.isEmpty ? 'Informe a quilometragem' : null,
               ),
@@ -67,7 +67,7 @@ class FuelRegister extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 decoration: customInputDecoration(
                     "Quilometragem atual", Icons.gas_meter),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 validator: (value) =>
                     value!.isEmpty ? 'Informe a quilometragem' : null,
               ),
@@ -77,7 +77,7 @@ class FuelRegister extends StatelessWidget {
               TextFormField(
                 controller: _dateController,
                 decoration: customInputDecoration("Data", Icons.calendar_today),
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 validator: (value) => value!.isEmpty ? 'Informe a data' : null,
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());

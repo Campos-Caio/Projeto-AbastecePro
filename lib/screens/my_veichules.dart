@@ -25,6 +25,13 @@ class MyVeichules extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Meus Veiculos!'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              icon: const Icon(Icons.home))
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: veichulesStream,
@@ -35,8 +42,38 @@ class MyVeichules extends StatelessWidget {
             );
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: const Text('Nenhum veiculo registrado!'),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Você não tem nenhum veículo cadastrado! :(",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey.withOpacity(0.5),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/registerVeichule');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Colors.deepPurple,
+                    ),
+                    child: const Text(
+                      "Cadastre seu primeiro veículo",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 

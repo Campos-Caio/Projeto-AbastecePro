@@ -38,7 +38,7 @@ class _VeichuleRegisterState extends State<VeichuleRegister> {
           const SnackBar(content: Text("Veiculo registrado com sucesso!")),
         );
 
-        Navigator.pop(context);
+        Navigator.of(context).pushReplacementNamed('/myVeichules');
       }
     }
   }
@@ -46,7 +46,17 @@ class _VeichuleRegisterState extends State<VeichuleRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registrar Veículo')),
+      appBar: AppBar(
+        title: const Text('Registrar Veículo'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              icon: const Icon(Icons.home))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -61,7 +71,6 @@ class _VeichuleRegisterState extends State<VeichuleRegister> {
                 validator: (value) =>
                     value!.isEmpty ? 'Informe o nome do veículo' : null,
               ),
-              
               const SizedBox(height: 20),
               TextFormField(
                 controller: _modelController,

@@ -1,3 +1,4 @@
+import 'package:abastece_pro/widgets/custom_button.dart';
 import 'package:abastece_pro/widgets/custom_input_decoration.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,7 +66,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Perfil")),
+      appBar: AppBar(
+        title: const Text("Perfil"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              icon: const Icon(Icons.home))
+        ],
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -77,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     TextFormField(
                       controller: _nameController,
                       decoration: customInputDecoration('Nome', Icons.person),
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       validator: (value) =>
                           value!.isEmpty ? "Campo obrigatório" : null,
                     ),
@@ -85,23 +95,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     TextFormField(
                       controller: _emailController,
                       decoration: customInputDecoration('Email', Icons.email),
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       validator: (value) =>
                           value!.isEmpty ? "Campo obrigatório" : null,
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: _phoneController,
-                      decoration: customInputDecoration('Telefone', Icons.phone_android),
-                      style: TextStyle(color: Colors.black),
+                      decoration: customInputDecoration(
+                          'Telefone', Icons.phone_android),
+                      style: const TextStyle(color: Colors.black),
                       validator: (value) =>
                           value!.isEmpty ? "Campo obrigatório" : null,
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _saveProfile,
-                      child: const Text("Salvar Alterações"),
-                    ),
+                    CustomButton(text: 'Salvar', onPressed: _saveProfile)
                   ],
                 ),
               ),

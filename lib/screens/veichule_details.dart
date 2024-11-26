@@ -97,34 +97,40 @@ class VeichuleDetails extends StatelessWidget {
                 TextFormField(
                   controller: _nameController,
                   decoration: customInputDecoration('Nome', Icons.person),
-                  style: TextStyle(color: Colors.black),                  
+                  style: const TextStyle(color: Colors.black),
                   validator: (value) =>
                       value!.isEmpty ? 'Informe o nome' : null,
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
                   controller: _plateController,
                   decoration: customInputDecoration('Placa', Icons.add),
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                   validator: (value) =>
                       value!.isEmpty ? 'Informe a placa' : null,
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
                   controller: _modelController,
                   decoration: customInputDecoration('Modelo', Icons.add),
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                   validator: (value) =>
                       value!.isEmpty ? 'Informe o modelo' : null,
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextFormField(
                   controller: _yearController,
-                  decoration: customInputDecoration('Placa', Icons.calendar_month),
-                  style: TextStyle(color: Colors.black),
+                  decoration:
+                      customInputDecoration('Placa', Icons.calendar_month),
+                  style: const TextStyle(color: Colors.black),
                   keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      value!.isEmpty ? 'Informe o ano' : null,
+                  validator: (value) => value!.isEmpty ? 'Informe o ano' : null,
                 ),
               ],
             ),
@@ -132,7 +138,18 @@ class VeichuleDetails extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Colors.deepPurple,
+              ),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -159,7 +176,18 @@ class VeichuleDetails extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Salvar'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Colors.deepPurple,
+              ),
+              child: const Text(
+                'Salvar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -172,7 +200,16 @@ class VeichuleDetails extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalhes do Veículo')),
+      appBar: AppBar(
+        title: const Text('Detalhes do Veículo'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              icon: const Icon(Icons.home))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: StreamBuilder<double>(
